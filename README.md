@@ -14,6 +14,7 @@ This repo is Brandon's **Shareable Base**: real daily configuration that is safe
 - zimfw + Pure prompt stack on all supported Linux/macOS machines
 - public-safe secret tooling bootstrap for `fnox`; secret config stays private
 - `~/.local/bin/zenity-sudo-askpass` for GUI sudo prompts in agent shells
+- Aikido Safe Chain install and managed zsh shell integration when available
 
 ## First install on a new machine
 

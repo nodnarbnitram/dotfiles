@@ -13,3 +13,7 @@ elif [ -x /usr/local/bin/brew ]; then
 elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
+
+if [ -r "$HOME/.safe-chain/scripts/init-posix.sh" ]; then
+  source "$HOME/.safe-chain/scripts/init-posix.sh" # Safe-chain Zsh initialization script
+fi

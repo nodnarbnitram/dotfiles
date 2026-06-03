@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "--- Ensuring Aikido Safe Chain exists ---"
+
+safe_chain_home="$HOME/.safe-chain"
+safe_chain_bin="$safe_chain_home/bin/safe-chain"
+safe_chain_init="$safe_chain_home/scripts/init-posix.sh"
+
+if [ ! -x "$safe_chain_bin" ]; then
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL https://github.com/AikidoSec/safe-chain/releases/latest/download/install-safe-chain.sh | sh -s -- --ci
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://github.com/AikidoSec/safe-chain/releases/latest/download/install-safe-chain.sh | sh -s -- --ci
+  else
+    echo "curl or wget is required to install Safe Chain" >&2
+    exit 1
+  fi
+else
+  echo "Safe Chain already installed at $safe_chain_bin"
+fi
+
+if [ ! -r "$safe_chain_init" ]; then
+  tmp_home="$(mktemp -d)"
+  trap 'rm -rf "$tmp_home"' EXIT
+
+  # `safe-chain setup` copies init scripts, but also edits shell startup files.
+  # Run it with a temporary HOME so chezmoi remains the owner of ~/.zshrc.
+  HOME="$tmp_home" "$safe_chain_bin" setup
+fi
+
+if [ -r "$safe_chain_init" ]; then
+  echo "Safe Chain shell init available at $safe_chain_init"
+else
+  echo "Safe Chain installed, but $safe_chain_init was not created" >&2
+  exit 1
+fi

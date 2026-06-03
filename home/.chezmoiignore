@@ -1,6 +1,10 @@
 {{- $desktop := false -}}
 {{- if hasKey . "desktop" }}{{- $desktop = .desktop -}}{{- end -}}
+{{- $work := false -}}
+{{- if hasKey . "work" }}{{- $work = .work -}}{{- end -}}
 {{- if ne $desktop true }}
 .config/ghostty
-.config/zed
+{{- end }}
+{{- if ne $work true }}
+.config/zsh/helpers/aws.zsh
 {{- end }}

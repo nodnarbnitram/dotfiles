@@ -4,11 +4,13 @@ Portable machine bootstrap repo, modeled after Manuel Chichi's chezmoi-based dot
 
 ## What it manages
 
-- `~/.zshrc` with existing shell helpers, `fnox` secret lookups, `mise`, Bun, pnpm, and agent helpers
+- `~/.zshrc` as a small loader for XDG zsh helpers, zimfw, Pure, `mise`, Bun, pnpm, and optional private includes
 - `~/.gitconfig` templated from install-time name/email prompts
 - `~/.tmux.conf` plus TPM via chezmoi externals
-- GUI-only configs for Ghostty and Zed when `desktop=true`
+- GUI-only Ghostty config when `desktop=true`
 - Conservative package bootstrap for Arch/CachyOS and Debian/Ubuntu
+- zimfw + Pure prompt stack on all supported Linux/macOS machines
+- public-safe secret tooling bootstrap for `fnox`; secret config stays private
 
 ## First install on a new machine
 
@@ -28,8 +30,9 @@ During `chezmoi init`, answer:
 
 - `name`: Git display name
 - `email`: Git email
+- `editor`: default terminal editor command, for example `vim`, `nvim`, or `code --wait`
 - `work`: enables future work-only package/config sections
-- `desktop`: installs/includes GUI configs like Ghostty and Zed
+- `desktop`: installs/includes GUI configs like Ghostty
 
 ## Daily workflow
 
@@ -52,5 +55,6 @@ git add . && git commit -m "Add example config"
 ## Safety notes
 
 - Do **not** commit `~/.ssh`, API tokens, browser profiles, caches, or generated app databases.
-- This repo keeps secret *lookups* in `.zshrc`, not secret values.
+- Do **not** commit internal DNS names, private IP ranges, VPN config, or machine-specific editor/app config.
+- Put private shell customizations and secret activation in `~/.config/zsh/private.zsh`; `.zshrc` sources it when present, but the shareable base does not manage it.
 - Run `chezmoi diff` before `chezmoi apply` on every new machine.

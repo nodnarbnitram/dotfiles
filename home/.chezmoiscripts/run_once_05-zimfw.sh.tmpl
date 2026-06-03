@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+ZIM_HOME="${ZIM_HOME:-$XDG_DATA_HOME/zimfw}"
+ZIMFW_SCRIPT="$ZIM_HOME/zimfw.zsh"
+
+echo "--- Ensuring zimfw plugin manager exists ---"
+if [ -r "$ZIMFW_SCRIPT" ]; then
+  echo "zimfw already installed at $ZIMFW_SCRIPT"
+  exit 0
+fi
+
+curl -fsSL --create-dirs -o "$ZIMFW_SCRIPT" \
+  https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh

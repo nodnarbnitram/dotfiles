@@ -1,0 +1,21 @@
+# Core interactive zsh behavior. Keep this public-safe.
+{{- $editor := "vim" -}}
+{{- if hasKey . "editor" }}{{- $editor = .editor -}}{{- end }}
+
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTSIZE=50000
+SAVEHIST=100000
+mkdir -p "${HISTFILE:h}" 2>/dev/null || true
+
+setopt append_history
+setopt extended_history
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt share_history
+
+bindkey -e
+
+export EDITOR={{ $editor | quote }}
+export SUDO_EDITOR="$EDITOR"
+
+alias re-source="source ~/.zshrc"

@@ -8,13 +8,11 @@ arch:
     - github-cli
     - jq
     - mise
-    - starship
     - tmux
     - vim
     - zsh
   desktop:
     - ghostty
-    - zed
   work: []
 apt:
   common:

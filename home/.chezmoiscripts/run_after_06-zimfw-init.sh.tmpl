@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+ZIM_CONFIG_FILE="${ZIM_CONFIG_FILE:-$XDG_CONFIG_HOME/zsh/zimrc}"
+ZIM_HOME="${ZIM_HOME:-$XDG_DATA_HOME/zimfw}"
+ZIMFW_SCRIPT="$ZIM_HOME/zimfw.zsh"
+
+echo "--- Ensuring zimfw modules are initialized ---"
+if [ ! -r "$ZIMFW_SCRIPT" ]; then
+  curl -fsSL --create-dirs -o "$ZIMFW_SCRIPT" \
+    https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+
+if [ ! -r "$ZIM_CONFIG_FILE" ]; then
+  echo "zim config not found at $ZIM_CONFIG_FILE; skipping zimfw init"
+  exit 0
+fi
+
+if [ ! "$ZIM_HOME/init.zsh" -nt "$ZIM_CONFIG_FILE" ]; then
+  ZIM_CONFIG_FILE="$ZIM_CONFIG_FILE" ZIM_HOME="$ZIM_HOME" zsh "$ZIMFW_SCRIPT" init
+else
+  echo "zimfw init.zsh is up to date"
+fi

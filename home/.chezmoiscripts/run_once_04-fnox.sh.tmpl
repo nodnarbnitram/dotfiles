@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "--- Ensuring fnox exists ---"
+if command -v fnox >/dev/null 2>&1; then
+  echo "fnox already installed"
+  exit 0
+fi
+
+if command -v mise >/dev/null 2>&1; then
+  mise_bin="mise"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+  mise_bin="$HOME/.local/bin/mise"
+else
+  echo "mise is not installed yet; fnox will need to be installed manually or on the next apply"
+  exit 0
+fi
+
+if "$mise_bin" registry fnox >/dev/null 2>&1; then
+  "$mise_bin" use -g fnox@latest
+else
+  "$mise_bin" use -g github:jdx/fnox@latest
+fi

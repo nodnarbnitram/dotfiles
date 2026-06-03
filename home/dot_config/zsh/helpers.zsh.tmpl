@@ -1,0 +1,23 @@
+# Managed by chezmoi. Source helper modules selected for this machine.
+{{- $work := false -}}
+{{- if hasKey . "work" }}{{- $work = .work -}}{{- end }}
+
+_chezmoi_zsh_helper_dir="${XDG_CONFIG_HOME:-$HOME/.config}/zsh/helpers"
+
+_chezmoi_source_zsh_helper() {
+  local helper="$1"
+  local helper_path="$_chezmoi_zsh_helper_dir/$helper.zsh"
+  [ -r "$helper_path" ] && source "$helper_path"
+}
+
+_chezmoi_source_zsh_helper core
+_chezmoi_source_zsh_helper paths
+_chezmoi_source_zsh_helper tools
+_chezmoi_source_zsh_helper agents
+_chezmoi_source_zsh_helper tmux
+{{- if $work }}
+_chezmoi_source_zsh_helper aws
+{{- end }}
+
+unfunction _chezmoi_source_zsh_helper
+unset _chezmoi_zsh_helper_dir

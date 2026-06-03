@@ -22,6 +22,7 @@ Public-safe tooling can live here. Secret Configuration and Secret Inventory bel
 
 - Edit files under `home/`, not files directly in `$HOME`.
 - Prefer `chezmoi add`, `chezmoi edit`, `chezmoi diff`, and `chezmoi apply --dry-run` for managed files.
+- Do not prompt for or manage global Git identity (`user.name` / `user.email`). Brandon uses different identities per repo.
 - Keep `home/.chezmoiignore` aligned with Machine Role decisions (`work`, `desktop`, OS) so role-specific files are not installed where they do not belong.
 - Do not manage SSH, DNS/VPN/WARP system state, or machine-specific editor/app config in the Shareable Base.
 

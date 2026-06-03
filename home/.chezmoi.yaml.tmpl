@@ -1,12 +1,8 @@
-{{- $name := promptStringOnce . "name" "Git/user display name" -}}
-{{- $email := promptStringOnce . "email" "Git email address" -}}
 {{- $editor := promptStringOnce . "editor" "Default terminal editor command" "vim" -}}
 {{- $work := promptBoolOnce . "work" "Is this a work machine?" -}}
 {{- $desktop := promptBoolOnce . "desktop" "Is this a desktop/GUI machine?" -}}
 
 data:
-  name: {{ $name | quote }}
-  email: {{ $email | quote }}
   editor: {{ $editor | quote }}
   work: {{ $work }}
   desktop: {{ $desktop }}

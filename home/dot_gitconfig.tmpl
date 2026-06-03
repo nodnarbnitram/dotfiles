@@ -1,5 +1,7 @@
+{{- $gitEditor := .editor -}}
+{{- if hasKey . "waitEditor" }}{{- $gitEditor = .waitEditor -}}{{- end }}
 [core]
-	editor = {{ .editor | quote }}
+	editor = {{ $gitEditor | quote }}
 [alias]
 	st = status
 [init]

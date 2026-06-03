@@ -1,6 +1,8 @@
 # Core interactive zsh behavior. Keep this public-safe.
 {{- $editor := "vim" -}}
 {{- if hasKey . "editor" }}{{- $editor = .editor -}}{{- end }}
+{{- $waitEditor := $editor -}}
+{{- if hasKey . "waitEditor" }}{{- $waitEditor = .waitEditor -}}{{- end }}
 
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
 HISTSIZE=50000
@@ -15,7 +17,25 @@ setopt share_history
 
 bindkey -e
 
-export EDITOR={{ $editor | quote }}
-export SUDO_EDITOR="$EDITOR"
+__dotfiles_editor={{ $editor | quote }}
+__dotfiles_wait_editor={{ $waitEditor | quote }}
+
+if [[ ${__dotfiles_editor%% *} == zed ]] && ! command -v zed >/dev/null 2>&1 && command -v zeditor >/dev/null 2>&1; then
+  __dotfiles_editor="${__dotfiles_editor/#zed/zeditor}"
+fi
+
+if [[ ${__dotfiles_wait_editor%% *} == zed ]] && ! command -v zed >/dev/null 2>&1 && command -v zeditor >/dev/null 2>&1; then
+  __dotfiles_wait_editor="${__dotfiles_wait_editor/#zed/zeditor}"
+fi
+
+export EDITOR="$__dotfiles_editor"
+export VISUAL="$EDITOR"
+export SUDO_EDITOR="$__dotfiles_wait_editor"
+
+unset __dotfiles_editor __dotfiles_wait_editor
+
+if command -v zeditor >/dev/null 2>&1 && ! command -v zed >/dev/null 2>&1; then
+  alias zed=zeditor
+fi
 
 alias re-source="source ~/.zshrc"

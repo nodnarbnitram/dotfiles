@@ -31,7 +31,7 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply <your-repo-url>
 
 During `chezmoi init`, answer:
 
-- `editor`: default terminal editor command, for example `vim`, `nvim`, `zed`, `cursor`, or `code`. GUI editor commands `zed`, `cursor`, and `code` automatically get `--wait` when missing.
+- `editor`: default terminal editor command, for example `vim`, `nvim`, `zeditor`, `zed`, `cursor`, or `code`. GUI editor commands `zeditor`, `zed`, `cursor`, and `code` automatically get `--wait` for Git and `sudoedit` when missing.
 - `work`: enables future work-only package/config sections
 - `desktop`: installs/includes GUI configs like Ghostty
 

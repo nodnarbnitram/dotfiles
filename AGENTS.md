@@ -42,6 +42,7 @@ Public-safe tooling can live here. Secret Configuration and Secret Inventory bel
 - `fnox` is the Secret Abstraction. This repo may install fnox tooling, but must not include `fnox.toml`, provider details, secret names, key paths, or token exports.
 - Agent sudo prompts use `~/.local/bin/zenity-sudo-askpass`. Keep the wrapper public-safe; it may depend on the `zenity` command but must not store or log passwords.
 - Safe Chain may be installed by this repo, but chezmoi owns shell startup integration. Do not let Safe Chain append unmanaged lines to `~/.zshrc`; source `$HOME/.safe-chain/scripts/init-posix.sh` from a managed helper instead.
+- `install.sh` may ask for a private overlay path or Git URL, but the public repo must not bake in Brandon's private URL, secret names, or private overlay contents.
 
 ## Script naming and ordering
 

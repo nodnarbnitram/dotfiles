@@ -24,6 +24,8 @@ cd ~/dotfiles
 ./install.sh
 ```
 
+After the public base applies, `install.sh` can optionally apply a private overlay. Use the default `~/dotfiles-private` or enter a private Git URL; remote overlays are cloned into `${XDG_DATA_HOME:-~/.local/share}/chezmoi-private` and applied as a second chezmoi source.
+
 For a remote-only bootstrap after publishing:
 
 ```sh

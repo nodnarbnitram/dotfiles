@@ -99,7 +99,7 @@ Also run a role dry-run when changing `.chezmoiignore`, helper selection, or rol
 ```sh
 tmp=$(mktemp -d)
 cat > "$tmp/chezmoi.yaml" <<'YAML'
-sourceDir: /home/nodnarb/dotfiles/home
+sourceDir: /path/to/dotfiles/home
 data:
   name: Test User
   email: test@example.com

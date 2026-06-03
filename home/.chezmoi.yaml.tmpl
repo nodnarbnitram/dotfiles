@@ -1,4 +1,9 @@
-{{- $editor := promptStringOnce . "editor" "Default terminal editor command" "vim" -}}
+{{- $editorInput := promptStringOnce . "editor" "Default terminal editor command" "vim" -}}
+{{- $editor := $editorInput -}}
+{{- $editorCommand := first (splitList " " $editorInput) -}}
+{{- if and (or (eq $editorCommand "zed") (eq $editorCommand "cursor") (eq $editorCommand "code")) (not (contains "--wait" $editorInput)) -}}
+{{- $editor = printf "%s --wait" $editorInput -}}
+{{- end -}}
 {{- $work := promptBoolOnce . "work" "Is this a work machine?" -}}
 {{- $desktop := promptBoolOnce . "desktop" "Is this a desktop/GUI machine?" -}}
 

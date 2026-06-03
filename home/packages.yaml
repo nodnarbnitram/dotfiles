@@ -1,0 +1,30 @@
+# Package groups used by .chezmoiscripts/run_once_01-install-packages.sh.tmpl.
+# Keep this conservative; add machine-specific tools after confirming package names.
+arch:
+  common:
+    - base-devel
+    - curl
+    - git
+    - github-cli
+    - jq
+    - mise
+    - starship
+    - tmux
+    - vim
+    - zsh
+  desktop:
+    - ghostty
+    - zed
+  work: []
+apt:
+  common:
+    - build-essential
+    - curl
+    - git
+    - gh
+    - jq
+    - tmux
+    - vim
+    - zsh
+  desktop: []
+  work: []

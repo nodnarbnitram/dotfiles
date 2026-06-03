@@ -1,0 +1,9 @@
+# local/editor noise
+.DS_Store
+*.swp
+*.tmp
+
+# never commit decrypted private material
+*.age.tmp
+secrets/
+private/

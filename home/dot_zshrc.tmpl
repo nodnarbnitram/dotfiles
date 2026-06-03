@@ -1,0 +1,144 @@
+# OPENSPEC:START
+# OpenSpec shell completions configuration
+fpath=("{{ .chezmoi.homeDir }}/.zsh/completions" $fpath)
+autoload -Uz compinit
+compinit
+# OPENSPEC:END
+
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=50000
+SAVEHIST=100000
+bindkey -e
+# End of lines configured by zsh-newuser-install
+
+export STARSHIP_CONFIG=~/example/non/default/path/starship.toml
+
+# The following lines were added by compinstall
+zstyle :compinstall filename '{{ .chezmoi.homeDir }}/.zshrc'
+
+export FNOX_AGE_KEY_FILE="$HOME/.config/fnox/age.txt"
+export OPENROUTER_API_KEY="$(fnox get OPENROUTER_API_KEY)"
+export CARGO_REGISTRY_TOKEN="$(fnox get CARGO_REGISTRY_TOKEN)"
+export HA_TOKEN="$(fnox get HA_TOKEN)"
+export AXIOM_ADMIN_TOKEN="$(fnox get AXIOM_ADMIN_TOKEN)"
+export GREPTILE_API_KEY="$(fnox get GREPTILE_API_KEY 2>/dev/null || true)"
+
+export POSTHOG_API_KEY="$(fnox get POSTHOG_API_KEY 2>/dev/null || true)"
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+export EDITOR=zeditor
+export SUDO_EDITOR="zeditor --wait"
+
+# opencode
+export PATH={{ .chezmoi.homeDir }}/.opencode/bin:$PATH
+export OPENCODE_EXPERIMENTAL_OXFMT=true
+
+# aliases
+alias re-source="source ~/.zshrc"
+alias zed="zeditor"
+
+eval "$(starship init zsh)"
+
+# bun completions
+[ -s "{{ .chezmoi.homeDir }}/.bun/_bun" ] && source "{{ .chezmoi.homeDir }}/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+eval "$({{ .chezmoi.homeDir }}/.local/bin/mise activate zsh)"
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+eval "$(fnox activate zsh)"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:{{ .chezmoi.homeDir }}/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# ByteRover CLI
+export PATH="$HOME/.brv-cli/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="{{ .chezmoi.homeDir }}/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Coding-agent launch helpers: agent sessions get Zenity-backed sudo prompts.
+_agent_with_zenity_sudo() {
+  AI_AGENT_SUDO_ASKPASS=1 \
+  SUDO_ASKPASS="$HOME/.local/bin/zenity-sudo-askpass" \
+  command "$@"
+}
+
+opencode() {
+  _agent_with_zenity_sudo opencode "$@"
+}
+
+claude() {
+  _agent_with_zenity_sudo claude "$@"
+}
+
+pi() {
+  _agent_with_zenity_sudo pi "$@"
+}
+
+agent-shell() {
+  AI_AGENT_SUDO_ASKPASS=1 \
+  SUDO_ASKPASS="$HOME/.local/bin/zenity-sudo-askpass" \
+  "${SHELL:-/usr/bin/zsh}" -l "$@"
+}
+
+
+tm() {
+  # If no argument is provided, just list sessions
+  if [[ -z "$1" ]]; then
+    tmux list-sessions
+    return
+  fi
+
+  # Check if session exists; attach if it does, create if it doesn't
+  tmux has-session -t "$1" 2>/dev/null
+  if [ $? -eq 0 ]; then
+    tmux attach -t "$1"
+  else
+    tmux new-session -s "$1"
+  fi
+}
+
+oc() {
+  local port
+  port=$(shuf -i 49152-65535 -n 1)
+  OPENCODE_PORT="$port" \
+  opencode --port "$port" "$@"
+}
+
+oct() {
+  local port session_name cmd
+  port=$(shuf -i 49152-65535 -n 1)
+  session_name="opencode-${port}"
+
+  printf -v cmd "%q " "OPENCODE_PORT=$port" opencode --port "$port" "$@"
+  tmux new-session -A -s "$session_name" "$cmd"
+}
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
+# Added by Antigravity CLI installer
+export PATH="{{ .chezmoi.homeDir }}/.local/bin:$PATH"
+source {{ .chezmoi.homeDir }}/.safe-chain/scripts/init-posix.sh # Safe-chain Zsh initialization script
+
+# >>> wsw github packages token >>>
+# Let npm/pi install private @weshipwork packages from GitHub Packages.
+# .npmrc reads this via ${GITHUB_PACKAGES_TOKEN}; the token itself is not stored there.
+if [[ -z "${GITHUB_PACKAGES_TOKEN:-}" ]] && command -v gh >/dev/null 2>&1; then
+  export GITHUB_PACKAGES_TOKEN="$(gh auth token 2>/dev/null || true)"
+fi
+# <<< wsw github packages token <<<

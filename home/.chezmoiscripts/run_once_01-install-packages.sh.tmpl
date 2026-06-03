@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ $desktop := false -}}
+{{ if hasKey . "desktop" }}{{ $desktop = .desktop }}{{ end -}}
+{{ $work := false -}}
+{{ if hasKey . "work" }}{{ $work = .work }}{{ end }}
+
+echo "--- Installing OS packages ---"
+if command -v pacman >/dev/null 2>&1; then
+  packages=(
+    "base-devel"
+    "curl"
+    "git"
+    "github-cli"
+    "jq"
+    "mise"
+    "starship"
+    "tmux"
+    "vim"
+    "zsh"
+{{- if $desktop }}
+    "ghostty"
+    "zed"
+{{- end }}
+{{- if $work }}
+    # Add work-only Arch packages here.
+{{- end }}
+  )
+  sudo pacman -Syu --needed --noconfirm "${packages[@]}"
+elif command -v apt-get >/dev/null 2>&1; then
+  sudo apt-get update
+  sudo apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    gh \
+    jq \
+    tmux \
+    vim \
+    zsh \
+    || true
+else
+  echo "Unsupported package manager; install packages manually."
+fi

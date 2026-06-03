@@ -1,0 +1,6 @@
+{{- $desktop := false -}}
+{{- if hasKey . "desktop" }}{{- $desktop = .desktop -}}{{- end -}}
+{{- if ne $desktop true }}
+.config/ghostty
+.config/zed
+{{- end }}

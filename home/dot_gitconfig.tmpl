@@ -1,0 +1,15 @@
+[user]
+	name = {{ .name | quote }}
+	email = {{ .email | quote }}
+[core]
+	editor = zeditor --wait
+[alias]
+	st = status
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential

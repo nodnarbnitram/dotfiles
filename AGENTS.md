@@ -22,7 +22,7 @@ Public-safe tooling can live here. Secret Configuration and Secret Inventory bel
 
 - Edit files under `home/`, not files directly in `$HOME`.
 - Prefer `chezmoi add`, `chezmoi edit`, `chezmoi diff`, and `chezmoi apply --dry-run` for managed files.
-- Do not prompt for or manage global Git identity (`user.name` / `user.email`). Brandon uses different identities per repo.
+- Do not commit Git identity values (`user.name` / `user.email`). `install.sh` may prompt for identities and write them to local-only files under `~/.config/git/`, outside chezmoi management.
 - Keep `home/.chezmoiignore` aligned with Machine Role decisions (`work`, `desktop`, OS) so role-specific files are not installed where they do not belong.
 - Do not manage SSH, DNS/VPN/WARP system state, or machine-specific editor/app config in the Shareable Base.
 
@@ -43,6 +43,7 @@ Public-safe tooling can live here. Secret Configuration and Secret Inventory bel
 - Agent sudo prompts use `~/.local/bin/zenity-sudo-askpass`. Keep the wrapper public-safe; it may depend on the `zenity` command but must not store or log passwords.
 - Safe Chain may be installed by this repo, but chezmoi owns shell startup integration. Do not let Safe Chain append unmanaged lines to `~/.zshrc`; source `$HOME/.safe-chain/scripts/init-posix.sh` from a managed helper instead.
 - `install.sh` may ask for a private overlay path or Git URL, but the public repo must not bake in Brandon's private URL, secret names, or private overlay contents.
+- `install.sh` may create local Git identity config at `~/.config/git/local.inc` and `~/.config/git/identities/*.inc`; do not add those rendered files to either dotfiles repo.
 
 ## Script naming and ordering
 

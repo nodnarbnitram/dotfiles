@@ -38,12 +38,12 @@ During `chezmoi init`, answer:
 - `work`: enables future work-only package/config sections
 - `desktop`: installs/includes GUI configs like Ghostty
 
-This repo does **not** set global Git identity. Configure `user.name` and `user.email` per repository, for example:
+The managed public `~/.gitconfig` does **not** commit a Git identity. During install, you can optionally generate local-only machine identity config:
 
-```sh
-git config user.email "person@example.com"
-git config user.name "Your Name"
-```
+- default/global Git display name and email
+- folder-specific identities for repos under paths like `~/Projects/weshipwork/`
+
+Those values are written outside chezmoi to `~/.config/git/local.inc` and `~/.config/git/identities/*.inc`. They are not committed to this repo.
 
 ## Daily workflow
 
@@ -69,7 +69,7 @@ Read `AGENTS.md` before making structural changes. The short version:
 
 - preserve the Shareable Base; do not genericize real public-safe preferences
 - keep Forbidden Material out of git, including secret names and provider config
-- do not set global Git identity here; use per-repo `git config user.email ...`
+- do not commit Git identity values here; `install.sh` may create local-only Git identity files outside chezmoi
 - use XDG paths where tools support them cleanly
 - keep `~/.zshrc` as a small loader; add shell behavior as helper modules under `home/dot_config/zsh/helpers/`
 - number chezmoi scripts within their phase, for example `run_once_01-*`, `run_once_after_01-*`, and `run_after_01-*`

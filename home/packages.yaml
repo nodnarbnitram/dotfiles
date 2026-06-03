@@ -13,6 +13,7 @@ arch:
     - zsh
   desktop:
     - ghostty
+    - zenity
   work: []
 apt:
   common:
@@ -24,5 +25,6 @@ apt:
     - tmux
     - vim
     - zsh
-  desktop: []
+  desktop:
+    - zenity
   work: []

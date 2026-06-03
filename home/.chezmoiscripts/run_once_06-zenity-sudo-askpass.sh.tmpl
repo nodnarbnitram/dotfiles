@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+{{ $desktop := false -}}
+{{ if hasKey . "desktop" }}{{ $desktop = .desktop }}{{ end }}
+
+askpass="$HOME/.local/bin/zenity-sudo-askpass"
+
+echo "--- Ensuring zenity-sudo-askpass exists ---"
+mkdir -p "$HOME/.local/bin"
+
+if {{ if $desktop }}true{{ else }}false{{ end }} && ! command -v zenity >/dev/null 2>&1; then
+  echo "zenity command not found; attempting install"
+  if command -v pacman >/dev/null 2>&1; then
+    sudo pacman -S --needed --noconfirm zenity
+  elif command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y zenity
+  elif command -v brew >/dev/null 2>&1; then
+    brew install ncruces/tap/zenity
+  elif command -v go >/dev/null 2>&1; then
+    go install github.com/ncruces/zenity/cmd/zenity@latest
+  else
+    echo "No supported installer found for zenity; install it manually for sudo askpass prompts." >&2
+  fi
+fi
+
+tmp="$(mktemp)"
+cat > "$tmp" <<'EOF'
+#!/usr/bin/env sh
+set -eu
+
+if ! command -v zenity >/dev/null 2>&1; then
+  echo "zenity command not found; cannot prompt for sudo password" >&2
+  exit 1
+fi
+
+prompt="${1:-sudo password:}"
+exec zenity --password --title="sudo" --text="$prompt"
+EOF
+
+if [ ! -r "$askpass" ] || ! cmp -s "$tmp" "$askpass"; then
+  install -m 700 "$tmp" "$askpass"
+  echo "installed $askpass"
+else
+  echo "$askpass already up to date"
+fi
+
+rm -f "$tmp"

@@ -2,6 +2,8 @@
 
 Portable machine bootstrap repo, modeled after Manuel Chichi's chezmoi-based dotfiles.
 
+This repo is Brandon's **Shareable Base**: real daily configuration that is safe to reuse across machines. Private overlays and local files carry secrets, work-specific values, and machine-only state.
+
 ## What it manages
 
 - `~/.zshrc` as a small loader for XDG zsh helpers, zimfw, Pure, `mise`, Bun, pnpm, and optional private includes
@@ -11,6 +13,7 @@ Portable machine bootstrap repo, modeled after Manuel Chichi's chezmoi-based dot
 - Conservative package bootstrap for Arch/CachyOS and Debian/Ubuntu
 - zimfw + Pure prompt stack on all supported Linux/macOS machines
 - public-safe secret tooling bootstrap for `fnox`; secret config stays private
+- `~/.local/bin/zenity-sudo-askpass` for GUI sudo prompts in agent shells
 
 ## First install on a new machine
 
@@ -51,6 +54,17 @@ chezmoi cd
 git status
 git add . && git commit -m "Add example config"
 ```
+
+## Repo rules
+
+Read `AGENTS.md` before making structural changes. The short version:
+
+- preserve the Shareable Base; do not genericize real public-safe preferences
+- keep Forbidden Material out of git, including secret names and provider config
+- use XDG paths where tools support them cleanly
+- keep `~/.zshrc` as a small loader; add shell behavior as helper modules under `home/dot_config/zsh/helpers/`
+- number chezmoi scripts within their phase, for example `run_once_01-*`, `run_once_after_01-*`, and `run_after_01-*`
+- validate rendered templates and dry-run role-specific installs before committing
 
 ## Safety notes
 

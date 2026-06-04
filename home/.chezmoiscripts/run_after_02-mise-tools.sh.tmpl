@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "--- Installing mise-managed tools ---"
+if command -v mise >/dev/null 2>&1; then
+  mise_bin="mise"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+  mise_bin="$HOME/.local/bin/mise"
+else
+  echo "mise is not installed yet; skipping mise-managed tools"
+  exit 0
+fi
+
+"$mise_bin" install -y

@@ -12,6 +12,7 @@ This repo is Brandon's **Shareable Base**: real daily configuration that is safe
 - GUI-only Ghostty config when `desktop=true`
 - Conservative package bootstrap for Arch/CachyOS and Debian/Ubuntu
 - zimfw + Pure prompt stack on all supported Linux/macOS machines
+- global mise-managed toolchain for Node, pnpm, Bun, Rust, Go, Python, uv, fnox, code-quality CLIs, Rust audit/test tools, pi, and context-mode
 - public-safe secret tooling bootstrap for `fnox`; secret config stays private
 - `~/.local/bin/zenity-sudo-askpass` for GUI sudo prompts in agent shells
 - Aikido Safe Chain install and managed zsh shell integration when available

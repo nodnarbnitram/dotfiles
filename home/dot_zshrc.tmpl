@@ -11,11 +11,17 @@ export ZIM_HOME="$XDG_DATA_HOME/zimfw"
 
 [ -r "$XDG_CONFIG_HOME/zsh/helpers.zsh" ] && source "$XDG_CONFIG_HOME/zsh/helpers.zsh"
 
+# Prompt defaults must be set before zimfw sources Pure. Pure is activated by
+# zimfw's module init, not by zsh's promptinit helper.
+[ -r "$XDG_CONFIG_HOME/zsh/helpers/prompt.zsh" ] && source "$XDG_CONFIG_HOME/zsh/helpers/prompt.zsh"
+
 if [ -r "$ZIM_HOME/init.zsh" ]; then
   source "$ZIM_HOME/init.zsh"
 fi
 
-[ -r "$XDG_CONFIG_HOME/zsh/helpers/prompt.zsh" ] && source "$XDG_CONFIG_HOME/zsh/helpers/prompt.zsh"
+# Bun's generated completion calls compinit if it is sourced too early. Load it
+# after zimfw's completion module so it only registers its compdef.
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
 # Private or machine-specific shell config belongs here. Do not manage this
 # file in the shareable base; let a private overlay or local setup provide it.

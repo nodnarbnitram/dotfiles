@@ -14,5 +14,7 @@ data:
   work: {{ $work }}
   desktop: {{ $desktop }}
 
+sourceDir: {{ .chezmoi.sourceDir | quote }}
+
 scriptEnv:
   NEEDRESTART_MODE: "a"

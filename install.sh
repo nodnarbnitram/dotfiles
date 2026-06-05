@@ -16,6 +16,20 @@ looks_like_git_url() {
   esac
 }
 
+find_homebrew() {
+  if command -v brew >/dev/null 2>&1; then
+    command -v brew
+  elif [ -x /opt/homebrew/bin/brew ]; then
+    printf '%s\n' /opt/homebrew/bin/brew
+  elif [ -x /usr/local/bin/brew ]; then
+    printf '%s\n' /usr/local/bin/brew
+  elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    printf '%s\n' /home/linuxbrew/.linuxbrew/bin/brew
+  else
+    return 1
+  fi
+}
+
 private_overlay_source() {
   local overlay_ref="$1"
   local overlay_path
@@ -47,7 +61,7 @@ private_overlay_source() {
 }
 
 apply_private_overlay() {
-  local answer overlay_ref overlay_source
+  local answer active_config overlay_config overlay_ref overlay_source
 
   read -r -p "Apply a private dotfiles overlay too? [y/N] " answer
   case "$answer" in
@@ -59,12 +73,35 @@ apply_private_overlay() {
   overlay_ref="${overlay_ref:-~/dotfiles-private}"
   overlay_source="$(private_overlay_source "$overlay_ref")"
 
+  active_config="$(chezmoi execute-template '{{ .chezmoi.configFile }}')"
+  overlay_config="$(mktemp)"
+  trap 'rm -f "$overlay_config"' RETURN
+
+  if [ -r "$active_config" ]; then
+    awk -v source_dir="$overlay_source" '
+      BEGIN { wrote_source_dir = 0 }
+      /^sourceDir:/ {
+        print "sourceDir: \"" source_dir "\""
+        wrote_source_dir = 1
+        next
+      }
+      { print }
+      END {
+        if (!wrote_source_dir) {
+          print "sourceDir: \"" source_dir "\""
+        }
+      }
+    ' "$active_config" > "$overlay_config"
+  else
+    printf 'sourceDir: "%s"\n' "$overlay_source" > "$overlay_config"
+  fi
+
   echo "--- Private overlay diff: $overlay_source ---"
-  chezmoi --source "$overlay_source" diff || true
+  chezmoi --config "$overlay_config" --source "$overlay_source" diff || true
 
   read -r -p "Apply private overlay changes? [y/N] " answer
   case "$answer" in
-    y|Y|yes|YES) chezmoi --source "$overlay_source" apply ;;
+    y|Y|yes|YES) chezmoi --config "$overlay_config" --source "$overlay_source" apply ;;
     *) echo "Aborted private overlay before apply." ;;
   esac
 }
@@ -201,6 +238,9 @@ if ! command -v chezmoi >/dev/null 2>&1; then
     sudo pacman -S --needed --noconfirm chezmoi
   elif command -v apt-get >/dev/null 2>&1; then
     sudo apt-get update && sudo apt-get install -y chezmoi
+  elif brew_bin="$(find_homebrew)"; then
+    "$brew_bin" install chezmoi
+    eval "$("$brew_bin" shellenv)"
   else
     sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
     export PATH="$HOME/.local/bin:$PATH"

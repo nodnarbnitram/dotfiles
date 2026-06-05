@@ -17,4 +17,10 @@ else
   exit 0
 fi
 
-"$mise_bin" install -y
+mise_config="${XDG_CONFIG_HOME:-$HOME/.config}/mise/config.toml"
+if [ ! -r "$mise_config" ]; then
+  echo "mise config not found at $mise_config; skipping mise-managed tools"
+  exit 0
+fi
+
+MISE_CONFIG_FILE="$mise_config" "$mise_bin" install -y

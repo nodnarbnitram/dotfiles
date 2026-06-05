@@ -10,7 +10,12 @@ uv = "latest"
 
 # Daily CLI tooling.
 fnox = "latest"
-betterleaks = "latest"
+"aqua:betterleaks/betterleaks" = "latest"
+"aqua:rtk-ai/rtk" = "latest"
+"aqua:ajeetdsouza/zoxide" = "latest"
+{{- if ne .chezmoi.os "darwin" }}
+"aqua:eza-community/eza" = "latest"
+{{- end }}
 typos = "latest"
 hk = "latest"
 

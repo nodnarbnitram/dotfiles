@@ -30,6 +30,7 @@ packages:
   darwin:
     brews:
       - chezmoi
+      - eza
       - git
       - gh
       - jq

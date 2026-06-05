@@ -96,8 +96,10 @@ apply_private_overlay() {
     printf 'sourceDir: "%s"\n' "$overlay_source" > "$overlay_config"
   fi
 
-  echo "--- Private overlay diff: $overlay_source ---"
-  chezmoi --config "$overlay_config" --source "$overlay_source" diff || true
+  echo "--- Private overlay pending changes: $overlay_source ---"
+  chezmoi --config "$overlay_config" --source "$overlay_source" status || true
+  echo "Run this separately for the full private overlay diff:"
+  echo "  chezmoi --source '$overlay_source' diff"
 
   read -r -p "Apply private overlay changes? [y/N] " answer
   case "$answer" in
@@ -253,7 +255,11 @@ else
   chezmoi init --source "$(cd "$(dirname "$0")" && pwd)"
 fi
 
-chezmoi diff || true
+echo "--- Pending public chezmoi changes ---"
+chezmoi status || true
+echo "Run this separately for the full public diff:"
+echo "  chezmoi diff"
+
 read -r -p "Apply these changes? [y/N] " answer
 case "$answer" in
   y|Y|yes|YES)

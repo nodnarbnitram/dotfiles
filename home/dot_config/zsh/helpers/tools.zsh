@@ -14,6 +14,17 @@ elif [ -x "$HOME/.local/bin/mise" ]; then
   eval "$("$HOME/.local/bin/mise" activate zsh)"
 fi
 
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+if command -v eza >/dev/null 2>&1; then
+  alias l="eza"
+  alias ll="eza -l --git"
+  alias la="eza -la --git"
+  alias lt="eza --tree --level=2"
+fi
+
 if [ -r "$HOME/.safe-chain/scripts/init-posix.sh" ]; then
   source "$HOME/.safe-chain/scripts/init-posix.sh" # Safe-chain Zsh initialization script
 fi

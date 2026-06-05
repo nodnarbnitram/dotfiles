@@ -1,3 +1,4 @@
+{{- if ne .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -9,40 +10,40 @@ set -euo pipefail
 echo "--- Installing OS packages ---"
 if command -v pacman >/dev/null 2>&1; then
   packages=(
-    "base-devel"
-    "curl"
-    "git"
-    "github-cli"
-    "jq"
-    "mise"
-    "tmux"
-    "vim"
-    "zsh"
+{{- range .packages.arch.common }}
+    {{ . | quote }}
+{{- end }}
 {{- if $desktop }}
-    "ghostty"
-    "zenity"
+{{- range .packages.arch.desktop }}
+    {{ . | quote }}
+{{- end }}
 {{- end }}
 {{- if $work }}
-    # Add work-only Arch packages here.
+{{- range .packages.arch.work }}
+    {{ . | quote }}
+{{- end }}
 {{- end }}
   )
   sudo pacman -Syu --needed --noconfirm "${packages[@]}"
 elif command -v apt-get >/dev/null 2>&1; then
   sudo apt-get update
   packages=(
-    build-essential
-    curl
-    git
-    gh
-    jq
-    tmux
-    vim
-    zsh
+{{- range .packages.apt.common }}
+    {{ . | quote }}
+{{- end }}
 {{- if $desktop }}
-    zenity
+{{- range .packages.apt.desktop }}
+    {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- if $work }}
+{{- range .packages.apt.work }}
+    {{ . | quote }}
+{{- end }}
 {{- end }}
   )
   sudo apt-get install -y "${packages[@]}" || true
 else
   echo "Unsupported package manager; install packages manually."
 fi
+{{- end -}}

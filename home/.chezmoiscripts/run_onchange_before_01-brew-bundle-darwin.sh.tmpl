@@ -1,0 +1,45 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+find_homebrew() {
+  if command -v brew >/dev/null 2>&1; then
+    command -v brew
+  elif [ -x /opt/homebrew/bin/brew ]; then
+    printf '%s\n' /opt/homebrew/bin/brew
+  elif [ -x /usr/local/bin/brew ]; then
+    printf '%s\n' /usr/local/bin/brew
+  else
+    return 1
+  fi
+}
+
+echo "--- Installing Homebrew packages ---"
+if ! brew_bin="$(find_homebrew)"; then
+  echo "Homebrew is not installed; install Homebrew before applying macOS packages." >&2
+  exit 0
+fi
+
+eval "$("$brew_bin" shellenv)"
+
+"$brew_bin" bundle --file=/dev/stdin <<'EOF'
+{{- range .packages.darwin.brews }}
+brew {{ . | quote }}
+{{- end }}
+{{- if .work }}
+{{- range .packages.darwin.workBrews }}
+brew {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- if .desktop }}
+{{- range .packages.darwin.casks }}
+cask {{ . | quote }}
+{{- end }}
+{{- end }}
+{{- if .work }}
+{{- range .packages.darwin.workCasks }}
+cask {{ . | quote }}
+{{- end }}
+{{- end }}
+EOF
+{{- end -}}

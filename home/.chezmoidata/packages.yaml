@@ -1,0 +1,43 @@
+packages:
+  arch:
+    common:
+      - base-devel
+      - curl
+      - git
+      - github-cli
+      - jq
+      - mise
+      - tmux
+      - vim
+      - zsh
+    desktop:
+      - ghostty
+      - zenity
+    work: []
+  apt:
+    common:
+      - build-essential
+      - curl
+      - git
+      - gh
+      - jq
+      - tmux
+      - vim
+      - zsh
+    desktop:
+      - zenity
+    work: []
+  darwin:
+    brews:
+      - chezmoi
+      - git
+      - gh
+      - jq
+      - mise
+      - tmux
+      - vim
+      - zsh
+    casks:
+      - ghostty
+    workBrews: []
+    workCasks: []

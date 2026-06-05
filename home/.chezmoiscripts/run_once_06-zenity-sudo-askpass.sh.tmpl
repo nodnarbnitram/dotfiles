@@ -6,6 +6,20 @@ set -euo pipefail
 
 askpass="$HOME/.local/bin/zenity-sudo-askpass"
 
+find_homebrew() {
+  if command -v brew >/dev/null 2>&1; then
+    command -v brew
+  elif [ -x /opt/homebrew/bin/brew ]; then
+    printf '%s\n' /opt/homebrew/bin/brew
+  elif [ -x /usr/local/bin/brew ]; then
+    printf '%s\n' /usr/local/bin/brew
+  elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    printf '%s\n' /home/linuxbrew/.linuxbrew/bin/brew
+  else
+    return 1
+  fi
+}
+
 echo "--- Ensuring zenity-sudo-askpass exists ---"
 mkdir -p "$HOME/.local/bin"
 
@@ -16,8 +30,8 @@ if {{ if $desktop }}true{{ else }}false{{ end }} && ! command -v zenity >/dev/nu
   elif command -v apt-get >/dev/null 2>&1; then
     sudo apt-get update
     sudo apt-get install -y zenity
-  elif command -v brew >/dev/null 2>&1; then
-    brew install ncruces/tap/zenity
+  elif brew_bin="$(find_homebrew)"; then
+    "$brew_bin" install ncruces/tap/zenity
   elif command -v go >/dev/null 2>&1; then
     go install github.com/ncruces/zenity/cmd/zenity@latest
   else

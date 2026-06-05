@@ -10,7 +10,7 @@ This repo is Brandon's **Shareable Base**: real daily configuration that is safe
 - `~/.gitconfig` templated from install-time name/email prompts
 - `~/.tmux.conf` plus TPM via chezmoi externals
 - GUI-only Ghostty config when `desktop=true`
-- Conservative package bootstrap for Arch/CachyOS and Debian/Ubuntu
+- Conservative package bootstrap for Arch/CachyOS, Debian/Ubuntu, and macOS/Homebrew
 - zimfw + Pure prompt stack on all supported Linux/macOS machines
 - global mise-managed toolchain for Node, pnpm, Bun, Rust, Go, Python, uv, fnox, code-quality CLIs, Rust audit/test tools, pi, and context-mode
 - public-safe secret tooling bootstrap for `fnox`; secret config stays private
@@ -26,6 +26,10 @@ cd ~/dotfiles
 ```
 
 After the public base applies, `install.sh` can optionally apply a private overlay. Use the default `~/dotfiles-private` or enter a private Git URL; remote overlays are cloned into `${XDG_DATA_HOME:-~/.local/share}/chezmoi-private` and applied as a second chezmoi source.
+
+Package lists live in `home/.chezmoidata/packages.yaml` and are rendered into `run_onchange_before_*` install scripts, so package installation re-runs only when the declared package lists change. On macOS, Homebrew is used when available even if it is installed at `/opt/homebrew/bin/brew` but not yet on the shell `PATH`, and packages are installed with an embedded `brew bundle` script.
+
+After each apply, the repo offers an optional interactive upgrade pass for OS packages, mise-managed tools, zimfw modules, and tmux plugins. Set `DOTFILES_SKIP_UPGRADE=1` to suppress the prompt or `DOTFILES_UPGRADE=1` to run the pass non-interactively.
 
 For a remote-only bootstrap after publishing:
 

@@ -22,6 +22,9 @@ Public-safe tooling can live here. Secret Configuration and Secret Inventory bel
 
 - Edit files under `home/`, not files directly in `$HOME`.
 - Prefer `chezmoi add`, `chezmoi edit`, `chezmoi diff`, and `chezmoi apply --dry-run` for managed files.
+- After changing templates or managed files, sync the current machine with `chezmoi diff` then `chezmoi apply`; use `chezmoi --source home ...` when this checkout is not the active source.
+- After changing `home/.chezmoi.yaml.tmpl`, regenerate local chezmoi config with `chezmoi init --source "$(pwd)/home"` before applying.
+- After changing `home/dot_config/mise/config.toml.tmpl`, apply `~/.config/mise/config.toml` and run `mise install` so newly declared tools are installed.
 - Do not commit Git identity values (`user.name` / `user.email`). `install.sh` may prompt for identities and write them to local-only files under `~/.config/git/`, outside chezmoi management.
 - Keep `home/.chezmoiignore` aligned with Machine Role decisions (`work`, `desktop`, OS) so role-specific files are not installed where they do not belong.
 - Do not manage SSH, DNS/VPN/WARP system state, or machine-specific editor/app config in the Shareable Base.

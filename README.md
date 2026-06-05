@@ -68,6 +68,46 @@ git status
 git add . && git commit -m "Add example config"
 ```
 
+## Syncing changes
+
+Edit managed files under `home/`, then render them onto the current machine:
+
+```sh
+chezmoi diff
+chezmoi apply
+```
+
+If this checkout is not the active chezmoi source, run from the repo root with an explicit source:
+
+```sh
+chezmoi --source home diff
+chezmoi --source home apply
+```
+
+When `home/.chezmoi.yaml.tmpl` changes, regenerate chezmoi's local config before applying:
+
+```sh
+chezmoi init --source "$(pwd)/home"
+chezmoi apply
+```
+
+When `home/dot_config/mise/config.toml.tmpl` changes, apply the rendered mise config and install the declared tools:
+
+```sh
+chezmoi apply ~/.config/mise/config.toml
+mise install
+```
+
+On another machine that already has this repo configured:
+
+```sh
+git pull
+chezmoi apply
+mise install
+```
+
+If the machine uses chezmoi's source checkout directly, `chezmoi update` can replace `git pull && chezmoi apply`.
+
 ## Repo rules
 
 Read `AGENTS.md` before making structural changes. The short version:

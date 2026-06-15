@@ -7,3 +7,6 @@
 *.age.tmp
 secrets/
 private/
+
+# local bootstrap/download artifacts
+bin/chezmoi
